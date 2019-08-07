@@ -95,7 +95,7 @@ not seem to fit on a 12GB GPU using `BERT-Large`). However, a reasonably strong
 
 
 
-Sample JSON file information used in SQuAD data set
+#### Sample JSON file information used in SQuAD data set, 
 ```
 {'data': [{'title': 'Super_Bowl_50',
    'paragraphs': [{'context': 'Super Bowl 50 was an American football game to determine the champion of the National Football League (NFL) for the 2015 season. The American Football Conference (AFC) champion Denver Broncos defeated the National Football Conference (NFC) champion Carolina Panthers 24–10 to earn their third Super Bowl title. The game was played on February 7, 2016, at Levi\'s Stadium in the San Francisco Bay Area at Santa Clara, California. As this was the 50th Super Bowl, the league emphasized the "golden anniversary" with various gold-themed initiatives, as well as temporarily suspending the tradition of naming each Super Bowl game with Roman numerals (under which the game would have been known as "Super Bowl L"), so that the logo could prominently feature the Arabic numerals 50.',
@@ -127,6 +127,7 @@ Steps to use the model BERT for Question and answer from a summary
 
 ## Command to Understand the unknown context with BERT and answering the asked Question
 Run run_squad.py with mentioning arguments of context and question for question and answering purpose
+here 'Context' variable represents the Unknown string of data and 'question' is the asked question from that context.
 ```
 python run_squad.py \
   --vocab_file=BERT_BASE_DIR/vocab.txt \
