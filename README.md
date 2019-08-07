@@ -1,6 +1,6 @@
 # Extending Google-BERT as Question and Answering model and Chatbot
 
-# BERT Introduction 
+## BERT Introduction 
 
 
 BERT( Bidirectional Encoder Representations from Transforers) method of pre-training language representations. With the use of pre-trained BERT models we can utilize a pre-trained memory information of sentence structure, language and text grammar related memory of large corpus of millions, or billions, of annotated training examples that it has trained.
