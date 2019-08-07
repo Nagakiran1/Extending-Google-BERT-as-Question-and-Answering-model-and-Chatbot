@@ -91,7 +91,6 @@ not seem to fit on a 12GB GPU using `BERT-Large`). However, a reasonably strong
 `BERT-Base` model can be trained on the GPU with these hyperparameters:
 
 
-## Features used by BERT
 ![alt text](https://github.com/Nagakiran1/Extending-Google-BERT-as-Question-and-Answering-model-and-Chatbot/blob/master/BERT_Qn_Ans.png)
 
 
@@ -126,7 +125,7 @@ High-level description of the Transformer encoder. The input is a sequence of to
 
 Steps to use the model BERT for Question and answer from a summary 
 
-#### Command to Understand the unknown context with BERT and answering the asked Question
+## Command to Understand the unknown context with BERT and answering the asked Question
 Run run_squad.py with mentioning arguments of context and question for question and answering purpose
 ```
 python run_squad.py \
@@ -139,10 +138,9 @@ python run_squad.py \
   --question=Which NFL team represented the AFC at Super Bowl 50?
 ```
 
+ 
 
-### 
-
-### Features Generated for the Sample JSON data context shown above
+#### Features Generated for the Sample JSON data context shown above
 
 For more information about BERT features explanation please refer [BERT Embeddings Tutorial] (https://mccormickml.com/2019/05/14/BERT-word-embeddings-tutorial/)
 
