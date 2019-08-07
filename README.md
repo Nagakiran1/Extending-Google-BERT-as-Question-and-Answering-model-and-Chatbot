@@ -2,16 +2,25 @@
 
 BERT( Bidirectional Encoder Representations from Transforers) method of pre-training language representations. With the use of pre-trained BERT models we can utilize a pre-trained memory information of sentence structure, language and text grammar related memory of large corpus of millions, or billions, of annotated training examples that it has trained.
 
-We have made two new BERT models available:
 
-*   **[`BERT-Base, Multilingual`](https://storage.googleapis.com/bert_models/2018_11_03/multilingual_L-12_H-768_A-12.zip)
-    (Not recommended, use `Multilingual Cased` instead)**: 102 languages,
-    12-layer, 768-hidden, 12-heads, 110M parameters
-*   **[`BERT-Base, Chinese`](https://storage.googleapis.com/bert_models/2018_11_03/chinese_L-12_H-768_A-12.zip)**:
-    Chinese Simplified and Traditional, 12-layer, 768-hidden, 12-heads, 110M
-    parameters
 
-We use character-based tokenization for Chinese, and WordPiece tokenization for
+
+How BERT works
+BERT makes use of Transformer, an attention mechanism that learns contextual relations between words (or sub-words) in a text. In its vanilla form, Transformer includes two separate mechanisms — an encoder that reads the text input and a decoder that produces a prediction for the task. Since BERT’s goal is to generate a language model, only the encoder mechanism is necessary. The detailed workings of Transformer are described in a paper by Google.
+ 
+
+The pre-trained model can then be fine-tuned on small-data NLP tasks like question answering and sentiment analysis, resulting in substantial accuracy improvements compared to training on these datasets from scratch. 
+•	BERT is a huge model, with 24 Transformer blocks, 1024 hidden units in each layer, and 340M parameters.
+•	The model is pre-trained on 40 epochs over a 3.3 billion word corpus, including BooksCorpus (800 million words) and English Wikipedia (2.5 billion words).
+
+For more information on BERT , we can go through the [BERT Google AI blog ](https://ai.googleblog.com/2018/11/open-sourcing-bert-state-of-art-pre.html)
+
+
+
+
+
+
+BERT uses character-based tokenization for Chinese, and WordPiece tokenization for
 all other languages. Both models should work out-of-the-box without any code
 changes. We did update the implementation of `BasicTokenizer` in
 `tokenization.py` to support Chinese character tokenization, so please update if
@@ -113,21 +122,7 @@ task which can be generated from any monolingual corpus: Given two sentences `A`
 and `B`, is `B` the actual next sentence that comes after `A`, or just a random
 sentence from the corpus?
 
-```
-Sentence A: the man went to the store .
-Sentence B: he bought a gallon of milk .
-Label: IsNextSentence
-```
 
-```
-Sentence A: the man went to the store .
-Sentence B: penguins are flightless .
-Label: NotNextSentence
-```
-
-We then train a large model (12-layer to 24-layer Transformer) on a large corpus
-(Wikipedia + [BookCorpus](http://yknzhu.wixsite.com/mbweb)) for a long time (1M
-update steps), and that's BERT.
 
 Using BERT has two stages: *Pre-training* and *fine-tuning*.
 
