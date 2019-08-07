@@ -1,5 +1,8 @@
 # Extending Google-BERT as Question and Answering model and Chatbot
 
+# BERT Introduction 
+
+
 BERT( Bidirectional Encoder Representations from Transforers) method of pre-training language representations. With the use of pre-trained BERT models we can utilize a pre-trained memory information of sentence structure, language and text grammar related memory of large corpus of millions, or billions, of annotated training examples that it has trained.
 
 
@@ -29,18 +32,11 @@ you forked it. However, we did not change the tokenization API.
 For more, see the
 [Multilingual README](https://github.com/google-research/bert/blob/master/multilingual.md).
 
-**\*\*\*\*\* End new information \*\*\*\*\***
-
-## Introduction
 
 **BERT**, or **B**idirectional **E**ncoder **R**epresentations from
 **T**ransformers, is a new method of pre-training language representations which
 obtains state-of-the-art results on a wide array of Natural Language Processing
 (NLP) tasks.
-
-Our academic paper which describes BERT in detail and provides full results on a
-number of tasks can be found here:
-[https://arxiv.org/abs/1810.04805](https://arxiv.org/abs/1810.04805).
 
 To give a few numbers, here are the results on the
 [SQuAD v1.1](https://rajpurkar.github.io/SQuAD-explorer/) question answering
