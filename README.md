@@ -120,22 +120,26 @@ Text information should be mentioned to the context key of JSON format given
 Features used by the BERT model for understanding the given Context
 
 
-```shell
-python run_squad.py \
-  --vocab_file=$BERT_BASE_DIR/vocab.txt \
-  --bert_config_file=$BERT_BASE_DIR/bert_config.json \
-  --init_checkpoint=$BERT_BASE_DIR/bert_model.ckpt \
-  --do_train=True \
-  --train_file=$SQUAD_DIR/train-v1.1.json \
-  --do_predict=True \
-  --predict_file=$SQUAD_DIR/dev-v1.1.json \
-  --train_batch_size=12 \
-  --learning_rate=3e-5 \
-  --num_train_epochs=2.0 \
-  --max_seq_length=384 \
-  --doc_stride=128 \
-  --output_dir=/tmp/squad_base/
+
+
+High-level description of the Transformer encoder. The input is a sequence of tokens, which embedded into vectors and then processed in the neural network. The output is a sequence of vectors of size H, in which each vector corresponds to an input token with the same index.
+
+Steps to use the model BERT for Question and answer from a summary 
+
+Run run_squad.py with mentioning arguments of context and question for question and answering purpose
 ```
+python run_squad.py \
+  --vocab_file=BERT_BASE_DIR/vocab.txt \
+  --bert_config_file=BERT_BASE_DIR/bert_config.json \
+  --init_checkpoint=BERT_BASE_DIR/bert_model.ckpt \
+  --do_predict=True\
+  --context= Super Bowl 50 was an American football game to determine the champion of the National Football League (NFL) for the 2015 season. The American Football Conference (AFC) champion Denver Broncos defeated the National Football Conference (NFC) champion Carolina Panthers 24–10 to earn their third Super Bowl title. The game was played on February 7, 2016, at Levi\'s Stadium in the San Francisco Bay Area at Santa Clara, California. As this was the 50th Super Bowl, the league emphasized the "golden anniversary" with various gold-themed initiatives, as well as temporarily suspending the tradition of naming each Super Bowl game with Roman numerals (under which the game would have been known as "Super Bowl L"), so that the logo could prominently feature the Arabic numerals 50.\
+  --output_dir=Data
+  --question=Which NFL team represented the AFC at Super Bowl 50?
+```
+
+
+### 
 
 ### Features Generated for the Sample JSON data context shown above
 
@@ -180,6 +184,38 @@ segment ids to indicate whether a token belongs to the first sequence or the sec
 INFO:tensorflow:segment_ids: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
 ```
+
+Which should produce an output like this:
+Output for the Question asked from the summary
+
+```shell
+American Football Conference (AFC) champion Denver Broncos defeated the National Football Conference
+```
+The Context passed in command and the question mentioned in the command can be changed according the requirement. 
+BERT able to understands the context by learning through the Features generated and will be able to answer the question to the extent of trained data.
+
+
+The Code added does'nt change the basic functionalities, We can use the same Configurations for the training and predictions, here the followed command allows to train the model with the train sample SQuAD data and makes Predictions for the Dev set data.
+
+
+```shell
+python run_squad.py \
+  --vocab_file=$BERT_BASE_DIR/vocab.txt \
+  --bert_config_file=$BERT_BASE_DIR/bert_config.json \
+  --init_checkpoint=$BERT_BASE_DIR/bert_model.ckpt \
+  --do_train=True \
+  --train_file=$SQUAD_DIR/train-v1.1.json \
+  --do_predict=True \
+  --predict_file=$SQUAD_DIR/dev-v1.1.json \
+  --train_batch_size=12 \
+  --learning_rate=3e-5 \
+  --num_train_epochs=2.0 \
+  --max_seq_length=384 \
+  --doc_stride=128 \
+  --output_dir=/tmp/squad_base/
+```
+
+
 
 
 The dev set predictions will be saved into a file called `predictions.json` in
@@ -336,7 +372,7 @@ If you already know what BERT is and you just want to get started, you can
 [run a state-of-the-art fine-tuning](#fine-tuning-with-bert) in only a few
 minutes.
 
-## What is BERT?
+### What is BERT?
 
 BERT is a method of pre-training language representations, meaning that we train
 a general-purpose "language understanding" model on a large text corpus (like
@@ -402,22 +438,10 @@ adding code to this repository which allows for much larger effective batch size
 on the GPU. See the section on [out-of-memory issues](#out-of-memory-issues) for
 more details.
 
-This code was tested with TensorFlow 1.11.0. It was tested with Python2 and
-Python3 (but more thoroughly with Python2, since this is what's used internally
-in Google).
-
 The fine-tuning examples which use `BERT-Base` should be able to run on a GPU
 that has at least 12GB of RAM using the hyperparameters given.
 
 
-Please see the
-[Google Cloud TPU tutorial](https://cloud.google.com/tpu/docs/tutorials/mnist)
-for how to use Cloud TPUs. Alternatively, you can use the Google Colab notebook
-"[BERT FineTuning with Cloud TPUs](https://colab.research.google.com/github/tensorflow/tpu/blob/master/tools/colab/bert_finetuning_with_cloud_tpus.ipynb)".
-
-On Cloud TPUs, the pretrained model and the output directory will need to be on
-Google Cloud Storage. For example, if you have a bucket named `some_bucket`, you
-might use the following flags instead:
 
 ```
   --output_dir=gs://some_bucket/my_output_dir/
@@ -474,107 +498,4 @@ System       | Seq Length | Max Batch Size
 ...          | 384        | 0
 ...          | 512        | 0
 
-Unfortunately, these max batch sizes for `BERT-Large` are so small that they
-will actually harm the model accuracy, regardless of the learning rate used. We
-are working on adding code to this repository which will allow much larger
-effective batch sizes to be used on the GPU. The code will be based on one (or
-both) of the following techniques:
-
-*   **Gradient accumulation**: The samples in a minibatch are typically
-    independent with respect to gradient computation (excluding batch
-    normalization, which is not used here). This means that the gradients of
-    multiple smaller minibatches can be accumulated before performing the weight
-    update, and this will be exactly equivalent to a single larger update.
-
-*   [**Gradient checkpointing**](https://github.com/openai/gradient-checkpointing):
-    The major use of GPU/TPU memory during DNN training is caching the
-    intermediate activations in the forward pass that are necessary for
-    efficient computation in the backward pass. "Gradient checkpointing" trades
-    memory for compute time by re-computing the activations in an intelligent
-    way.
-
-**However, this is not implemented in the current release.**
-
-### Pre-training tips and caveats
-
-*   **If using your own vocabulary, make sure to change `vocab_size` in
-    `bert_config.json`. If you use a larger vocabulary without changing this,
-    you will likely get NaNs when training on GPU or TPU due to unchecked
-    out-of-bounds access.**
-*   If your task has a large domain-specific corpus available (e.g., "movie
-    reviews" or "scientific papers"), it will likely be beneficial to run
-    additional steps of pre-training on your corpus, starting from the BERT
-    checkpoint.
-*   The learning rate we used in the paper was 1e-4. However, if you are doing
-    additional steps of pre-training starting from an existing BERT checkpoint,
-    you should use a smaller learning rate (e.g., 2e-5).
-*   Current BERT models are English-only, but we do plan to release a
-    multilingual model which has been pre-trained on a lot of languages in the
-    near future (hopefully by the end of November 2018).
-*   Longer sequences are disproportionately expensive because attention is
-    quadratic to the sequence length. In other words, a batch of 64 sequences of
-    length 512 is much more expensive than a batch of 256 sequences of
-    length 128. The fully-connected/convolutional cost is the same, but the
-    attention cost is far greater for the 512-length sequences. Therefore, one
-    good recipe is to pre-train for, say, 90,000 steps with a sequence length of
-    128 and then for 10,000 additional steps with a sequence length of 512. The
-    very long sequences are mostly needed to learn positional embeddings, which
-    can be learned fairly quickly. Note that this does require generating the
-    data twice with different values of `max_seq_length`.
-*   If you are pre-training from scratch, be prepared that pre-training is
-    computationally expensive, especially on GPUs. If you are pre-training from
-    scratch, our recommended recipe is to pre-train a `BERT-Base` on a single
-    [preemptible Cloud TPU v2](https://cloud.google.com/tpu/docs/pricing), which
-    takes about 2 weeks at a cost of about $500 USD (based on the pricing in
-    October 2018). You will have to scale down the batch size when only training
-    on a single Cloud TPU, compared to what was used in the paper. It is
-    recommended to use the largest batch size that fits into TPU memory.
-
-### Pre-training data
-
-We will **not** be able to release the pre-processed datasets used in the paper.
-For Wikipedia, the recommended pre-processing is to download
-[the latest dump](https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles.xml.bz2),
-extract the text with
-[`WikiExtractor.py`](https://github.com/attardi/wikiextractor), and then apply
-any necessary cleanup to convert it into plain text.
-
-Unfortunately the researchers who collected the
-[BookCorpus](http://yknzhu.wixsite.com/mbweb) no longer have it available for
-public download. The
-[Project Guttenberg Dataset](https://web.eecs.umich.edu/~lahiri/gutenberg_dataset.html)
-is a somewhat smaller (200M word) collection of older books that are public
-domain.
-
-[Common Crawl](http://commoncrawl.org/) is another very large collection of
-text, but you will likely have to do substantial pre-processing and cleanup to
-extract a usable corpus for pre-training BERT.
-
-### Learning a new WordPiece vocabulary
-
-This repository does not include code for *learning* a new WordPiece vocabulary.
-The reason is that the code used in the paper was implemented in C++ with
-dependencies on Google's internal libraries. For English, it is almost always
-better to just start with our vocabulary and pre-trained models. For learning
-vocabularies of other languages, there are a number of open source options
-available. However, keep in mind that these are not compatible with our
-`tokenization.py` library:
-
-*   [Google's SentencePiece library](https://github.com/google/sentencepiece)
-
-*   [tensor2tensor's WordPiece generation script](https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/data_generators/text_encoder_build_subword.py)
-
-*   [Rico Sennrich's Byte Pair Encoding library](https://github.com/rsennrich/subword-nmt)
-
-## Using BERT in Colab
-
-If you want to use BERT with [Colab](https://colab.research.google.com), you can
-get started with the notebook
-"[BERT FineTuning with Cloud TPUs](https://colab.research.google.com/github/tensorflow/tpu/blob/master/tools/colab/bert_finetuning_with_cloud_tpus.ipynb)".
-**At the time of this writing (October 31st, 2018), Colab users can access a
-Cloud TPU completely for free.** Note: One per user, availability limited,
-requires a Google Cloud Platform account with storage (although storage may be
-purchased with free credit for signing up with GCP), and this capability may not
-longer be available in the future. Click on the BERT Colab that was just linked
-for more information.
 
