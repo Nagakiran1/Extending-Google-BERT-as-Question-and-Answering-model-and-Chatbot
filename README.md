@@ -1,0 +1,2 @@
+# Extending-Google-BERT-as-Question-and-Answering-model-and-Chatbot
+BERT Question and Answer system meant and works well for only limited number of words summary like 1 to 2 paragraphs only. It can’t be able to answer well from understanding more than 10 pages of data.  We can extend the BERT question and answer model to work as chatbot on large text. To accomplish the understanding of more than 10 pages of data, here we have used a specific approach of picking the data.  
