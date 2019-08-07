@@ -81,95 +81,12 @@ first *unsupervised*, *deeply bidirectional* system for pre-training NLP.
 *Unsupervised* means that BERT was trained using only a plain text corpus, which
 is important because an enormous amount of plain text data is publicly available
 on the web in many languages.
-
-Pre-trained representations can also either be *context-free* or *contextual*,
-and contextual representations can further be *unidirectional* or
-*bidirectional*. Context-free models such as
-[word2vec](https://www.tensorflow.org/tutorials/representation/word2vec) or
-[GloVe](https://nlp.stanford.edu/projects/glove/) generate a single "word
-embedding" representation for each word in the vocabulary, so `bank` would have
-the same representation in `bank deposit` and `river bank`. Contextual models
-instead generate a representation of each word that is based on the other words
-in the sentence.
-
-BERT was built upon recent work in pre-training contextual representations —
-including [Semi-supervised Sequence Learning](https://arxiv.org/abs/1511.01432),
-[Generative Pre-Training](https://blog.openai.com/language-unsupervised/),
-[ELMo](https://allennlp.org/elmo), and
-[ULMFit](http://nlp.fast.ai/classification/2018/05/15/introducting-ulmfit.html)
-— but crucially these models are all *unidirectional* or *shallowly
-bidirectional*. This means that each word is only contextualized using the words
-to its left (or right). For example, in the sentence `I made a bank deposit` the
-unidirectional representation of `bank` is only based on `I made a` but not
-`deposit`. Some previous work does combine the representations from separate
-left-context and right-context models, but only in a "shallow" manner. BERT
-represents "bank" using both its left and right context — `I made a ... deposit`
-— starting from the very bottom of a deep neural network, so it is *deeply
-bidirectional*.
-
-BERT uses a simple approach for this: We mask out 15% of the words in the input,
-run the entire sequence through a deep bidirectional
-[Transformer](https://arxiv.org/abs/1706.03762) encoder, and then predict only
-the masked words. For example:
-
-```
-Input: the man went to the [MASK1] . he bought a [MASK2] of milk.
-Labels: [MASK1] = store; [MASK2] = gallon
-```
-
 In order to learn relationships between sentences, we also train on a simple
 task which can be generated from any monolingual corpus: Given two sentences `A`
 and `B`, is `B` the actual next sentence that comes after `A`, or just a random
 sentence from the corpus?
 
 
-
-Using BERT has two stages: *Pre-training* and *fine-tuning*.
-
-**Pre-training** is fairly expensive (four days on 4 to 16 Cloud TPUs), but is a
-one-time procedure for each language (current models are English-only, but
-multilingual models will be released in the near future). We are releasing a
-number of pre-trained models from the paper which were pre-trained at Google.
-Most NLP researchers will never need to pre-train their own model from scratch.
-
-**Fine-tuning** is inexpensive. All of the results in the paper can be
-replicated in at most 1 hour on a single Cloud TPU, or a few hours on a GPU,
-starting from the exact same pre-trained model. SQuAD, for example, can be
-trained in around 30 minutes on a single Cloud TPU to achieve a Dev F1 score of
-91.0%, which is the single system state-of-the-art.
-
-The other important aspect of BERT is that it can be adapted to many types of
-NLP tasks very easily. In the paper, we demonstrate state-of-the-art results on
-sentence-level (e.g., SST-2), sentence-pair-level (e.g., MultiNLI), word-level
-(e.g., NER), and span-level (e.g., SQuAD) tasks with almost no task-specific
-modifications.
-
-## What has been released in this repository?
-
-We are releasing the following:
-
-*   TensorFlow code for the BERT model architecture (which is mostly a standard
-    [Transformer](https://arxiv.org/abs/1706.03762) architecture).
-*   Pre-trained checkpoints for both the lowercase and cased version of
-    `BERT-Base` and `BERT-Large` from the paper.
-*   TensorFlow code for push-button replication of the most important
-    fine-tuning experiments from the paper, including SQuAD, MultiNLI, and MRPC.
-
-All of the code in this repository works out-of-the-box with CPU, GPU, and Cloud
-TPU.
-
-## Pre-trained models
-
-We are releasing the `BERT-Base` and `BERT-Large` models from the paper.
-`Uncased` means that the text has been lowercased before WordPiece tokenization,
-e.g., `John Smith` becomes `john smith`. The `Uncased` model also strips out any
-accent markers. `Cased` means that the true case and accent markers are
-preserved. Typically, the `Uncased` model is better unless you know that case
-information is important for your task (e.g., Named Entity Recognition or
-Part-of-Speech tagging).
-
-These models are all released under the same license as the source code (Apache
-2.0).
 
 For information about the Multilingual and Chinese model, see the
 [Multilingual README](https://github.com/google-research/bert/blob/master/multilingual.md).
@@ -226,18 +143,6 @@ in Google).
 The fine-tuning examples which use `BERT-Base` should be able to run on a GPU
 that has at least 12GB of RAM using the hyperparameters given.
 
-### Fine-tuning with Cloud TPUs
-
-Most of the examples below assumes that you will be running training/evaluation
-on your local machine, using a GPU like a Titan X or GTX 1080.
-
-However, if you have access to a Cloud TPU that you want to train on, just add
-the following flags to `run_classifier.py` or `run_squad.py`:
-
-```
-  --use_tpu=True \
-  --tpu_name=$TPU_NAME
-```
 
 Please see the
 [Google Cloud TPU tutorial](https://cloud.google.com/tpu/docs/tutorials/mnist)
@@ -259,82 +164,17 @@ Storage folder `gs://bert_models/2018_10_18`. For example:
 export BERT_BASE_DIR=gs://bert_models/2018_10_18/uncased_L-12_H-768_A-12
 ```
 
-### Sentence (and sentence-pair) classification tasks
+# Using BERT for Question and Answering
 
-Before running this example you must download the
-[GLUE data](https://gluebenchmark.com/tasks) by running
-[this script](https://gist.github.com/W4ngatang/60c2bdb54d156a41194446737ce03e2e)
-and unpack it to some directory `$GLUE_DIR`. Next, download the `BERT-Base`
-checkpoint and unzip it to some directory `$BERT_BASE_DIR`.
 
-This example code fine-tunes `BERT-Base` on the Microsoft Research Paraphrase
-Corpus (MRPC) corpus, which only contains 3,600 examples and can fine-tune in a
-few minutes on most GPUs.
+Bert model is well defined in understanding the given Text summary and answering the question from that summary. To understand the Question related information Bert has trained on SQUAD data set and other labeled Question and answer dataset .
+Stanford Question Answering Dataset (SQuAD) is a reading comprehension dataset, consisting of questions posed by crowdworkers on a set of Wikipedia articles, where the answer to every question is a segment of text, or span, from the corresponding reading passage, or the question might be unanswerable.
+SQuAD2.0 combines the 100,000 questions in SQuAD1.1 with over 50,000 new, unanswerable questions written adversarially by crowdworkers to look similar to answerable ones. 
+Because SQuAD is an ongoing effort, Its not exposed to public as open source dataset, sample data can be downloaded from [SQUAD site ](https://rajpurkar.github.io/SQuAD-explorer/)
 
-```shell
-export BERT_BASE_DIR=/path/to/bert/uncased_L-12_H-768_A-12
-export GLUE_DIR=/path/to/glue
-
-python run_classifier.py \
-  --task_name=MRPC \
-  --do_train=true \
-  --do_eval=true \
-  --data_dir=$GLUE_DIR/MRPC \
-  --vocab_file=$BERT_BASE_DIR/vocab.txt \
-  --bert_config_file=$BERT_BASE_DIR/bert_config.json \
-  --init_checkpoint=$BERT_BASE_DIR/bert_model.ckpt \
-  --max_seq_length=128 \
-  --train_batch_size=32 \
-  --learning_rate=2e-5 \
-  --num_train_epochs=3.0 \
-  --output_dir=/tmp/mrpc_output/
-```
-
-You should see output like this:
-
-```
-***** Eval results *****
-  eval_accuracy = 0.845588
-  eval_loss = 0.505248
-  global_step = 343
-  loss = 0.505248
-```
-
-This means that the Dev set accuracy was 84.55%. Small sets like MRPC have a
-high variance in the Dev set accuracy, even when starting from the same
-pre-training checkpoint. If you re-run multiple times (making sure to point to
-different `output_dir`), you should see results between 84% and 88%.
-
-A few other pre-trained models are implemented off-the-shelf in
-`run_classifier.py`, so it should be straightforward to follow those examples to
-use BERT for any single-sentence or sentence-pair classification task.
-
-Note: You might see a message `Running train on CPU`. This really just means
-that it's running on something other than a Cloud TPU, which includes a GPU.
-
-#### Prediction from classifier
-
-Once you have trained your classifier you can use it in inference mode by using
-the --do_predict=true command. You need to have a file named test.tsv in the
-input folder. Output will be created in file called test_results.tsv in the
-output folder. Each line will contain output for each sample, columns are the
-class probabilities.
-
-```shell
-export BERT_BASE_DIR=/path/to/bert/uncased_L-12_H-768_A-12
-export GLUE_DIR=/path/to/glue
-export TRAINED_CLASSIFIER=/path/to/fine/tuned/classifier
-
-python run_classifier.py \
-  --task_name=MRPC \
-  --do_predict=true \
-  --data_dir=$GLUE_DIR/MRPC \
-  --vocab_file=$BERT_BASE_DIR/vocab.txt \
-  --bert_config_file=$BERT_BASE_DIR/bert_config.json \
-  --init_checkpoint=$TRAINED_CLASSIFIER \
-  --max_seq_length=128 \
-  --output_dir=/tmp/mrpc_output/
-```
+To get the whole data set, individual model has to be build in understanding the Summary and to answer the question from sample train dataset and has to be submitted, based on the evaluation criteria, data set will be shared.
+Here in BERT model with the use of run_squad.py file, we can get the answer for specific question for the specific sample train data given in SQuAD. To make it to work for individual Summary code has edited and given,
+You can try of executing the run_squad.py file for extracting the Answer from based on summary understanding.
 
 ### SQuAD 1.1
 
@@ -345,6 +185,9 @@ or data augmentation. However, it does require semi-complex data pre-processing
 and post-processing to deal with (a) the variable-length nature of SQuAD context
 paragraphs, and (b) the character-level answer annotations which are used for
 SQuAD training. This processing is implemented and documented in `run_squad.py`.
+
+
+
 
 To run on SQuAD, you will first need to download the dataset. The
 [SQuAD website](https://rajpurkar.github.io/SQuAD-explorer/) does not seem to
@@ -566,235 +409,6 @@ both) of the following techniques:
 
 **However, this is not implemented in the current release.**
 
-## Using BERT to extract fixed feature vectors (like ELMo)
-
-In certain cases, rather than fine-tuning the entire pre-trained model
-end-to-end, it can be beneficial to obtained *pre-trained contextual
-embeddings*, which are fixed contextual representations of each input token
-generated from the hidden layers of the pre-trained model. This should also
-mitigate most of the out-of-memory issues.
-
-As an example, we include the script `extract_features.py` which can be used
-like this:
-
-```shell
-# Sentence A and Sentence B are separated by the ||| delimiter for sentence
-# pair tasks like question answering and entailment.
-# For single sentence inputs, put one sentence per line and DON'T use the
-# delimiter.
-echo 'Who was Jim Henson ? ||| Jim Henson was a puppeteer' > /tmp/input.txt
-
-python extract_features.py \
-  --input_file=/tmp/input.txt \
-  --output_file=/tmp/output.jsonl \
-  --vocab_file=$BERT_BASE_DIR/vocab.txt \
-  --bert_config_file=$BERT_BASE_DIR/bert_config.json \
-  --init_checkpoint=$BERT_BASE_DIR/bert_model.ckpt \
-  --layers=-1,-2,-3,-4 \
-  --max_seq_length=128 \
-  --batch_size=8
-```
-
-This will create a JSON file (one line per line of input) containing the BERT
-activations from each Transformer layer specified by `layers` (-1 is the final
-hidden layer of the Transformer, etc.)
-
-Note that this script will produce very large output files (by default, around
-15kb for every input token).
-
-If you need to maintain alignment between the original and tokenized words (for
-projecting training labels), see the [Tokenization](#tokenization) section
-below.
-
-**Note:** You may see a message like `Could not find trained model in model_dir:
-/tmp/tmpuB5g5c, running initialization to predict.` This message is expected, it
-just means that we are using the `init_from_checkpoint()` API rather than the
-saved model API. If you don't specify a checkpoint or specify an invalid
-checkpoint, this script will complain.
-
-## Tokenization
-
-For sentence-level tasks (or sentence-pair) tasks, tokenization is very simple.
-Just follow the example code in `run_classifier.py` and `extract_features.py`.
-The basic procedure for sentence-level tasks is:
-
-1.  Instantiate an instance of `tokenizer = tokenization.FullTokenizer`
-
-2.  Tokenize the raw text with `tokens = tokenizer.tokenize(raw_text)`.
-
-3.  Truncate to the maximum sequence length. (You can use up to 512, but you
-    probably want to use shorter if possible for memory and speed reasons.)
-
-4.  Add the `[CLS]` and `[SEP]` tokens in the right place.
-
-Word-level and span-level tasks (e.g., SQuAD and NER) are more complex, since
-you need to maintain alignment between your input text and output text so that
-you can project your training labels. SQuAD is a particularly complex example
-because the input labels are *character*-based, and SQuAD paragraphs are often
-longer than our maximum sequence length. See the code in `run_squad.py` to show
-how we handle this.
-
-Before we describe the general recipe for handling word-level tasks, it's
-important to understand what exactly our tokenizer is doing. It has three main
-steps:
-
-1.  **Text normalization**: Convert all whitespace characters to spaces, and
-    (for the `Uncased` model) lowercase the input and strip out accent markers.
-    E.g., `John Johanson's, → john johanson's,`.
-
-2.  **Punctuation splitting**: Split *all* punctuation characters on both sides
-    (i.e., add whitespace around all punctuation characters). Punctuation
-    characters are defined as (a) Anything with a `P*` Unicode class, (b) any
-    non-letter/number/space ASCII character (e.g., characters like `$` which are
-    technically not punctuation). E.g., `john johanson's, → john johanson ' s ,`
-
-3.  **WordPiece tokenization**: Apply whitespace tokenization to the output of
-    the above procedure, and apply
-    [WordPiece](https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/data_generators/text_encoder.py)
-    tokenization to each token separately. (Our implementation is directly based
-    on the one from `tensor2tensor`, which is linked). E.g., `john johanson ' s
-    , → john johan ##son ' s ,`
-
-The advantage of this scheme is that it is "compatible" with most existing
-English tokenizers. For example, imagine that you have a part-of-speech tagging
-task which looks like this:
-
-```
-Input:  John Johanson 's   house
-Labels: NNP  NNP      POS NN
-```
-
-The tokenized output will look like this:
-
-```
-Tokens: john johan ##son ' s house
-```
-
-Crucially, this would be the same output as if the raw text were `John
-Johanson's house` (with no space before the `'s`).
-
-If you have a pre-tokenized representation with word-level annotations, you can
-simply tokenize each input word independently, and deterministically maintain an
-original-to-tokenized alignment:
-
-```python
-### Input
-orig_tokens = ["John", "Johanson", "'s",  "house"]
-labels      = ["NNP",  "NNP",      "POS", "NN"]
-
-### Output
-bert_tokens = []
-
-# Token map will be an int -> int mapping between the `orig_tokens` index and
-# the `bert_tokens` index.
-orig_to_tok_map = []
-
-tokenizer = tokenization.FullTokenizer(
-    vocab_file=vocab_file, do_lower_case=True)
-
-bert_tokens.append("[CLS]")
-for orig_token in orig_tokens:
-  orig_to_tok_map.append(len(bert_tokens))
-  bert_tokens.extend(tokenizer.tokenize(orig_token))
-bert_tokens.append("[SEP]")
-
-# bert_tokens == ["[CLS]", "john", "johan", "##son", "'", "s", "house", "[SEP]"]
-# orig_to_tok_map == [1, 2, 4, 6]
-```
-
-Now `orig_to_tok_map` can be used to project `labels` to the tokenized
-representation.
-
-There are common English tokenization schemes which will cause a slight mismatch
-between how BERT was pre-trained. For example, if your input tokenization splits
-off contractions like `do n't`, this will cause a mismatch. If it is possible to
-do so, you should pre-process your data to convert these back to raw-looking
-text, but if it's not possible, this mismatch is likely not a big deal.
-
-## Pre-training with BERT
-
-We are releasing code to do "masked LM" and "next sentence prediction" on an
-arbitrary text corpus. Note that this is *not* the exact code that was used for
-the paper (the original code was written in C++, and had some additional
-complexity), but this code does generate pre-training data as described in the
-paper.
-
-Here's how to run the data generation. The input is a plain text file, with one
-sentence per line. (It is important that these be actual sentences for the "next
-sentence prediction" task). Documents are delimited by empty lines. The output
-is a set of `tf.train.Example`s serialized into `TFRecord` file format.
-
-You can perform sentence segmentation with an off-the-shelf NLP toolkit such as
-[spaCy](https://spacy.io/). The `create_pretraining_data.py` script will
-concatenate segments until they reach the maximum sequence length to minimize
-computational waste from padding (see the script for more details). However, you
-may want to intentionally add a slight amount of noise to your input data (e.g.,
-randomly truncate 2% of input segments) to make it more robust to non-sentential
-input during fine-tuning.
-
-This script stores all of the examples for the entire input file in memory, so
-for large data files you should shard the input file and call the script
-multiple times. (You can pass in a file glob to `run_pretraining.py`, e.g.,
-`tf_examples.tf_record*`.)
-
-The `max_predictions_per_seq` is the maximum number of masked LM predictions per
-sequence. You should set this to around `max_seq_length` * `masked_lm_prob` (the
-script doesn't do that automatically because the exact value needs to be passed
-to both scripts).
-
-```shell
-python create_pretraining_data.py \
-  --input_file=./sample_text.txt \
-  --output_file=/tmp/tf_examples.tfrecord \
-  --vocab_file=$BERT_BASE_DIR/vocab.txt \
-  --do_lower_case=True \
-  --max_seq_length=128 \
-  --max_predictions_per_seq=20 \
-  --masked_lm_prob=0.15 \
-  --random_seed=12345 \
-  --dupe_factor=5
-```
-
-Here's how to run the pre-training. Do not include `init_checkpoint` if you are
-pre-training from scratch. The model configuration (including vocab size) is
-specified in `bert_config_file`. This demo code only pre-trains for a small
-number of steps (20), but in practice you will probably want to set
-`num_train_steps` to 10000 steps or more. The `max_seq_length` and
-`max_predictions_per_seq` parameters passed to `run_pretraining.py` must be the
-same as `create_pretraining_data.py`.
-
-```shell
-python run_pretraining.py \
-  --input_file=/tmp/tf_examples.tfrecord \
-  --output_dir=/tmp/pretraining_output \
-  --do_train=True \
-  --do_eval=True \
-  --bert_config_file=$BERT_BASE_DIR/bert_config.json \
-  --init_checkpoint=$BERT_BASE_DIR/bert_model.ckpt \
-  --train_batch_size=32 \
-  --max_seq_length=128 \
-  --max_predictions_per_seq=20 \
-  --num_train_steps=20 \
-  --num_warmup_steps=10 \
-  --learning_rate=2e-5
-```
-
-This will produce an output like this:
-
-```
-***** Eval results *****
-  global_step = 20
-  loss = 0.0979674
-  masked_lm_accuracy = 0.985479
-  masked_lm_loss = 0.0979328
-  next_sentence_accuracy = 1.0
-  next_sentence_loss = 3.45724e-05
-```
-
-Note that since our `sample_text.txt` file is very small, this example training
-will overfit that data in only a few steps and produce unrealistically high
-accuracy numbers.
-
 ### Pre-training tips and caveats
 
 *   **If using your own vocabulary, make sure to change `vocab_size` in
@@ -878,78 +492,3 @@ purchased with free credit for signing up with GCP), and this capability may not
 longer be available in the future. Click on the BERT Colab that was just linked
 for more information.
 
-## FAQ
-
-#### Is this code compatible with Cloud TPUs? What about GPUs?
-
-Yes, all of the code in this repository works out-of-the-box with CPU, GPU, and
-Cloud TPU. However, GPU training is single-GPU only.
-
-#### I am getting out-of-memory errors, what is wrong?
-
-See the section on [out-of-memory issues](#out-of-memory-issues) for more
-information.
-
-#### Is there a PyTorch version available?
-
-There is no official PyTorch implementation. However, NLP researchers from
-HuggingFace made a
-[PyTorch version of BERT available](https://github.com/huggingface/pytorch-pretrained-BERT)
-which is compatible with our pre-trained checkpoints and is able to reproduce
-our results. We were not involved in the creation or maintenance of the PyTorch
-implementation so please direct any questions towards the authors of that
-repository.
-
-#### Is there a Chainer version available?
-
-There is no official Chainer implementation. However, Sosuke Kobayashi made a
-[Chainer version of BERT available](https://github.com/soskek/bert-chainer)
-which is compatible with our pre-trained checkpoints and is able to reproduce
-our results. We were not involved in the creation or maintenance of the Chainer
-implementation so please direct any questions towards the authors of that
-repository.
-
-#### Will models in other languages be released?
-
-Yes, we plan to release a multi-lingual BERT model in the near future. We cannot
-make promises about exactly which languages will be included, but it will likely
-be a single model which includes *most* of the languages which have a
-significantly-sized Wikipedia.
-
-#### Will models larger than `BERT-Large` be released?
-
-So far we have not attempted to train anything larger than `BERT-Large`. It is
-possible that we will release larger models if we are able to obtain significant
-improvements.
-
-#### What license is this library released under?
-
-All code *and* models are released under the Apache 2.0 license. See the
-`LICENSE` file for more information.
-
-#### How do I cite BERT?
-
-For now, cite [the Arxiv paper](https://arxiv.org/abs/1810.04805):
-
-```
-@article{devlin2018bert,
-  title={BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding},
-  author={Devlin, Jacob and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
-  journal={arXiv preprint arXiv:1810.04805},
-  year={2018}
-}
-```
-
-If we submit the paper to a conference or journal, we will update the BibTeX.
-
-## Disclaimer
-
-This is not an official Google product.
-
-## Contact information
-
-For help or issues using BERT, please submit a GitHub issue.
-
-For personal communication related to BERT, please contact Jacob Devlin
-(`jacobdevlin@google.com`), Ming-Wei Chang (`mingweichang@google.com`), or
-Kenton Lee (`kentonl@google.com`).
