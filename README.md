@@ -46,130 +46,20 @@ To give a few numbers, here are the results on the
 [SQuAD v1.1](https://rajpurkar.github.io/SQuAD-explorer/) question answering
 task:
 
-SQuAD v1.1 Leaderboard (Oct 8th 2018) | Test EM  | Test F1
-------------------------------------- | :------: | :------:
-1st Place Ensemble - BERT             | **87.4** | **93.2**
-2nd Place Ensemble - nlnet            | 86.0     | 91.7
-1st Place Single Model - BERT         | **85.1** | **91.8**
-2nd Place Single Model - nlnet        | 83.5     | 90.1
-
-And several natural language inference tasks:
-
-System                  | MultiNLI | Question NLI | SWAG
------------------------ | :------: | :----------: | :------:
-BERT                    | **86.7** | **91.1**     | **86.3**
-OpenAI GPT (Prev. SOTA) | 82.2     | 88.1         | 75.0
-
-Plus many other tasks.
-
-Moreover, these results were all obtained with almost no task-specific neural
-network architecture design.
-
-If you already know what BERT is and you just want to get started, you can
-[download the pre-trained models](#pre-trained-models) and
-[run a state-of-the-art fine-tuning](#fine-tuning-with-bert) in only a few
-minutes.
-
-## What is BERT?
-
-BERT is a method of pre-training language representations, meaning that we train
-a general-purpose "language understanding" model on a large text corpus (like
-Wikipedia), and then use that model for downstream NLP tasks that we care about
-(like question answering). BERT outperforms previous methods because it is the
-first *unsupervised*, *deeply bidirectional* system for pre-training NLP.
-
-*Unsupervised* means that BERT was trained using only a plain text corpus, which
-is important because an enormous amount of plain text data is publicly available
-on the web in many languages.
-In order to learn relationships between sentences, we also train on a simple
-task which can be generated from any monolingual corpus: Given two sentences `A`
-and `B`, is `B` the actual next sentence that comes after `A`, or just a random
-sentence from the corpus?
 
 
 
-For information about the Multilingual and Chinese model, see the
-[Multilingual README](https://github.com/google-research/bert/blob/master/multilingual.md).
-
-**When using a cased model, make sure to pass `--do_lower=False` to the training
-scripts. (Or pass `do_lower_case=False` directly to `FullTokenizer` if you're
-using your own script.)**
-
-The links to the models are here (right-click, 'Save link as...' on the name):
-
-*   **[`BERT-Large, Uncased (Whole Word Masking)`](https://storage.googleapis.com/bert_models/2019_05_30/wwm_uncased_L-24_H-1024_A-16.zip)**:
-    24-layer, 1024-hidden, 16-heads, 340M parameters
-*   **[`BERT-Large, Cased (Whole Word Masking)`](https://storage.googleapis.com/bert_models/2019_05_30/wwm_cased_L-24_H-1024_A-16.zip)**:
-    24-layer, 1024-hidden, 16-heads, 340M parameters
-*   **[`BERT-Base, Uncased`](https://storage.googleapis.com/bert_models/2018_10_18/uncased_L-12_H-768_A-12.zip)**:
-    12-layer, 768-hidden, 12-heads, 110M parameters
-*   **[`BERT-Large, Uncased`](https://storage.googleapis.com/bert_models/2018_10_18/uncased_L-24_H-1024_A-16.zip)**:
-    24-layer, 1024-hidden, 16-heads, 340M parameters
-*   **[`BERT-Base, Cased`](https://storage.googleapis.com/bert_models/2018_10_18/cased_L-12_H-768_A-12.zip)**:
-    12-layer, 768-hidden, 12-heads , 110M parameters
-*   **[`BERT-Large, Cased`](https://storage.googleapis.com/bert_models/2018_10_18/cased_L-24_H-1024_A-16.zip)**:
-    24-layer, 1024-hidden, 16-heads, 340M parameters
-*   **[`BERT-Base, Multilingual Cased (New, recommended)`](https://storage.googleapis.com/bert_models/2018_11_23/multi_cased_L-12_H-768_A-12.zip)**:
-    104 languages, 12-layer, 768-hidden, 12-heads, 110M parameters
-*   **[`BERT-Base, Multilingual Uncased (Orig, not recommended)`](https://storage.googleapis.com/bert_models/2018_11_03/multilingual_L-12_H-768_A-12.zip)
-    (Not recommended, use `Multilingual Cased` instead)**: 102 languages,
-    12-layer, 768-hidden, 12-heads, 110M parameters
-*   **[`BERT-Base, Chinese`](https://storage.googleapis.com/bert_models/2018_11_03/chinese_L-12_H-768_A-12.zip)**:
-    Chinese Simplified and Traditional, 12-layer, 768-hidden, 12-heads, 110M
-    parameters
-
-Each .zip file contains three items:
-
-*   A TensorFlow checkpoint (`bert_model.ckpt`) containing the pre-trained
-    weights (which is actually 3 files).
-*   A vocab file (`vocab.txt`) to map WordPiece to word id.
-*   A config file (`bert_config.json`) which specifies the hyperparameters of
-    the model.
-
-## Fine-tuning with BERT
-
-**Important**: All results on the paper were fine-tuned on a single Cloud TPU,
-which has 64GB of RAM. It is currently not possible to re-produce most of the
-`BERT-Large` results on the paper using a GPU with 12GB - 16GB of RAM, because
-the maximum batch size that can fit in memory is too small. We are working on
-adding code to this repository which allows for much larger effective batch size
-on the GPU. See the section on [out-of-memory issues](#out-of-memory-issues) for
-more details.
-
-This code was tested with TensorFlow 1.11.0. It was tested with Python2 and
-Python3 (but more thoroughly with Python2, since this is what's used internally
-in Google).
-
-The fine-tuning examples which use `BERT-Base` should be able to run on a GPU
-that has at least 12GB of RAM using the hyperparameters given.
-
-
-Please see the
-[Google Cloud TPU tutorial](https://cloud.google.com/tpu/docs/tutorials/mnist)
-for how to use Cloud TPUs. Alternatively, you can use the Google Colab notebook
-"[BERT FineTuning with Cloud TPUs](https://colab.research.google.com/github/tensorflow/tpu/blob/master/tools/colab/bert_finetuning_with_cloud_tpus.ipynb)".
-
-On Cloud TPUs, the pretrained model and the output directory will need to be on
-Google Cloud Storage. For example, if you have a bucket named `some_bucket`, you
-might use the following flags instead:
-
-```
-  --output_dir=gs://some_bucket/my_output_dir/
-```
-
-The unzipped pre-trained model files can also be found in the Google Cloud
-Storage folder `gs://bert_models/2018_10_18`. For example:
-
-```
-export BERT_BASE_DIR=gs://bert_models/2018_10_18/uncased_L-12_H-768_A-12
-```
 
 # Using BERT for Question and Answering
 
 
 Bert model is well defined in understanding the given Text summary and answering the question from that summary. To understand the Question related information Bert has trained on SQUAD data set and other labeled Question and answer dataset .
 Stanford Question Answering Dataset (SQuAD) is a reading comprehension dataset, consisting of questions posed by crowdworkers on a set of Wikipedia articles, where the answer to every question is a segment of text, or span, from the corresponding reading passage, or the question might be unanswerable.
+
+
 SQuAD2.0 combines the 100,000 questions in SQuAD1.1 with over 50,000 new, unanswerable questions written adversarially by crowdworkers to look similar to answerable ones. 
+
+
 Because SQuAD is an ongoing effort, Its not exposed to public as open source dataset, sample data can be downloaded from [SQUAD site ](https://rajpurkar.github.io/SQuAD-explorer/)
 
 To get the whole data set, individual model has to be build in understanding the Summary and to answer the question from sample train dataset and has to be submitted, based on the evaluation criteria, data set will be shared.
@@ -203,6 +93,36 @@ The state-of-the-art SQuAD results from the paper currently cannot be reproduced
 on a 12GB-16GB GPU due to memory constraints (in fact, even batch size 1 does
 not seem to fit on a 12GB GPU using `BERT-Large`). However, a reasonably strong
 `BERT-Base` model can be trained on the GPU with these hyperparameters:
+
+
+## Features used by BERT
+![alt text](https://github.com/Nagakiran1/Extending-Google-BERT-as-Question-and-Answering-model-and-Chatbot/blob/master/BERT_Qn_Ans.png)
+
+
+
+Sample JSON file information used in SQuAD data set
+```
+{'data': [{'title': 'Super_Bowl_50',
+   'paragraphs': [{'context': 'Super Bowl 50 was an American football game to determine the champion of the National Football League (NFL) for the 2015 season. The American Football Conference (AFC) champion Denver Broncos defeated the National Football Conference (NFC) champion Carolina Panthers 24–10 to earn their third Super Bowl title. The game was played on February 7, 2016, at Levi\'s Stadium in the San Francisco Bay Area at Santa Clara, California. As this was the 50th Super Bowl, the league emphasized the "golden anniversary" with various gold-themed initiatives, as well as temporarily suspending the tradition of naming each Super Bowl game with Roman numerals (under which the game would have been known as "Super Bowl L"), so that the logo could prominently feature the Arabic numerals 50.',
+
+     	'qas': [{'answers': [{'answer_start': 177, 'text': 'Denver Broncos'},
+        	{'answer_start': 177, 'text': 'Denver Broncos'},
+        	{'answer_start': 177, 'text': 'Denver Broncos'}],
+       		'question': 'Which NFL team represented the AFC at Super Bowl 50?',
+       		'id': '56be4db0acb8001400a502ec'}]}]}],
+ 		'version': '1.1'}
+```
+
+
+Squad data comprises with Text summary of some information and the related questions with answer Start and answer string information with in the paragraph summary given.
+
+
+To utilize the BERT model for the Question and answering, there is a need of preparing the data similar to the SQuAD data structure mentioned.
+
+
+Text information should be mentioned to the context key of JSON format given
+Features used by the BERT model for understanding the given Context
+
 
 ```shell
 python run_squad.py \
@@ -342,6 +262,131 @@ python run_squad.py \
   --tpu_name=$TPU_NAME \
   --version_2_with_negative=True \
   --null_score_diff_threshold=$THRESH
+```
+
+
+
+
+
+
+
+
+SQuAD v1.1 Leaderboard (Oct 8th 2018) | Test EM  | Test F1
+------------------------------------- | :------: | :------:
+1st Place Ensemble - BERT             | **87.4** | **93.2**
+2nd Place Ensemble - nlnet            | 86.0     | 91.7
+1st Place Single Model - BERT         | **85.1** | **91.8**
+2nd Place Single Model - nlnet        | 83.5     | 90.1
+
+And several natural language inference tasks:
+
+System                  | MultiNLI | Question NLI | SWAG
+----------------------- | :------: | :----------: | :------:
+BERT                    | **86.7** | **91.1**     | **86.3**
+OpenAI GPT (Prev. SOTA) | 82.2     | 88.1         | 75.0
+
+Plus many other tasks.
+
+Moreover, these results were all obtained with almost no task-specific neural
+network architecture design.
+
+If you already know what BERT is and you just want to get started, you can
+[download the pre-trained models](#pre-trained-models) and
+[run a state-of-the-art fine-tuning](#fine-tuning-with-bert) in only a few
+minutes.
+
+## What is BERT?
+
+BERT is a method of pre-training language representations, meaning that we train
+a general-purpose "language understanding" model on a large text corpus (like
+Wikipedia), and then use that model for downstream NLP tasks that we care about
+(like question answering). BERT outperforms previous methods because it is the
+first *unsupervised*, *deeply bidirectional* system for pre-training NLP.
+
+*Unsupervised* means that BERT was trained using only a plain text corpus, which
+is important because an enormous amount of plain text data is publicly available
+on the web in many languages.
+In order to learn relationships between sentences, we also train on a simple
+task which can be generated from any monolingual corpus: Given two sentences `A`
+and `B`, is `B` the actual next sentence that comes after `A`, or just a random
+sentence from the corpus?
+
+
+
+For information about the Multilingual and Chinese model, see the
+[Multilingual README](https://github.com/google-research/bert/blob/master/multilingual.md).
+
+**When using a cased model, make sure to pass `--do_lower=False` to the training
+scripts. (Or pass `do_lower_case=False` directly to `FullTokenizer` if you're
+using your own script.)**
+
+The links to the models are here (right-click, 'Save link as...' on the name):
+
+*   **[`BERT-Large, Uncased (Whole Word Masking)`](https://storage.googleapis.com/bert_models/2019_05_30/wwm_uncased_L-24_H-1024_A-16.zip)**:
+    24-layer, 1024-hidden, 16-heads, 340M parameters
+*   **[`BERT-Large, Cased (Whole Word Masking)`](https://storage.googleapis.com/bert_models/2019_05_30/wwm_cased_L-24_H-1024_A-16.zip)**:
+    24-layer, 1024-hidden, 16-heads, 340M parameters
+*   **[`BERT-Base, Uncased`](https://storage.googleapis.com/bert_models/2018_10_18/uncased_L-12_H-768_A-12.zip)**:
+    12-layer, 768-hidden, 12-heads, 110M parameters
+*   **[`BERT-Large, Uncased`](https://storage.googleapis.com/bert_models/2018_10_18/uncased_L-24_H-1024_A-16.zip)**:
+    24-layer, 1024-hidden, 16-heads, 340M parameters
+*   **[`BERT-Base, Cased`](https://storage.googleapis.com/bert_models/2018_10_18/cased_L-12_H-768_A-12.zip)**:
+    12-layer, 768-hidden, 12-heads , 110M parameters
+*   **[`BERT-Large, Cased`](https://storage.googleapis.com/bert_models/2018_10_18/cased_L-24_H-1024_A-16.zip)**:
+    24-layer, 1024-hidden, 16-heads, 340M parameters
+*   **[`BERT-Base, Multilingual Cased (New, recommended)`](https://storage.googleapis.com/bert_models/2018_11_23/multi_cased_L-12_H-768_A-12.zip)**:
+    104 languages, 12-layer, 768-hidden, 12-heads, 110M parameters
+*   **[`BERT-Base, Multilingual Uncased (Orig, not recommended)`](https://storage.googleapis.com/bert_models/2018_11_03/multilingual_L-12_H-768_A-12.zip)
+    (Not recommended, use `Multilingual Cased` instead)**: 102 languages,
+    12-layer, 768-hidden, 12-heads, 110M parameters
+*   **[`BERT-Base, Chinese`](https://storage.googleapis.com/bert_models/2018_11_03/chinese_L-12_H-768_A-12.zip)**:
+    Chinese Simplified and Traditional, 12-layer, 768-hidden, 12-heads, 110M
+    parameters
+
+Each .zip file contains three items:
+
+*   A TensorFlow checkpoint (`bert_model.ckpt`) containing the pre-trained
+    weights (which is actually 3 files).
+*   A vocab file (`vocab.txt`) to map WordPiece to word id.
+*   A config file (`bert_config.json`) which specifies the hyperparameters of
+    the model.
+
+## Fine-tuning with BERT
+
+**Important**: All results on the paper were fine-tuned on a single Cloud TPU,
+which has 64GB of RAM. It is currently not possible to re-produce most of the
+`BERT-Large` results on the paper using a GPU with 12GB - 16GB of RAM, because
+the maximum batch size that can fit in memory is too small. We are working on
+adding code to this repository which allows for much larger effective batch size
+on the GPU. See the section on [out-of-memory issues](#out-of-memory-issues) for
+more details.
+
+This code was tested with TensorFlow 1.11.0. It was tested with Python2 and
+Python3 (but more thoroughly with Python2, since this is what's used internally
+in Google).
+
+The fine-tuning examples which use `BERT-Base` should be able to run on a GPU
+that has at least 12GB of RAM using the hyperparameters given.
+
+
+Please see the
+[Google Cloud TPU tutorial](https://cloud.google.com/tpu/docs/tutorials/mnist)
+for how to use Cloud TPUs. Alternatively, you can use the Google Colab notebook
+"[BERT FineTuning with Cloud TPUs](https://colab.research.google.com/github/tensorflow/tpu/blob/master/tools/colab/bert_finetuning_with_cloud_tpus.ipynb)".
+
+On Cloud TPUs, the pretrained model and the output directory will need to be on
+Google Cloud Storage. For example, if you have a bucket named `some_bucket`, you
+might use the following flags instead:
+
+```
+  --output_dir=gs://some_bucket/my_output_dir/
+```
+
+The unzipped pre-trained model files can also be found in the Google Cloud
+Storage folder `gs://bert_models/2018_10_18`. For example:
+
+```
+export BERT_BASE_DIR=gs://bert_models/2018_10_18/uncased_L-12_H-768_A-12
 ```
 
 ### Out-of-memory issues
