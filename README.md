@@ -126,6 +126,7 @@ High-level description of the Transformer encoder. The input is a sequence of to
 
 Steps to use the model BERT for Question and answer from a summary 
 
+#### Command to Understand the unknown context with BERT and answering the asked Question
 Run run_squad.py with mentioning arguments of context and question for question and answering purpose
 ```
 python run_squad.py \
@@ -195,7 +196,7 @@ The Context passed in command and the question mentioned in the command can be c
 BERT able to understands the context by learning through the Features generated and will be able to answer the question to the extent of trained data.
 
 
-The Code added does'nt change the basic functionalities, We can use the same Configurations for the training and predictions, here the followed command allows to train the model with the train sample SQuAD data and makes Predictions for the Dev set data.
+#### The Code added does'nt change the basic functionalities, We can use the same Configurations for the training and predictions, here the followed command allows to train the model with the train sample SQuAD data and makes Predictions for the Dev set data.
 
 
 ```shell
