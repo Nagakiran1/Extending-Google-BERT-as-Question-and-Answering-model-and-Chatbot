@@ -23,8 +23,8 @@ For more information on BERT , we can go through the [BERT Google AI blog ](http
 
 
 
-BERT uses character-based tokenization for Chinese, and WordPiece tokenization for
-all other languages. Both models should work out-of-the-box without any code
+[BERT uses character-based tokenization for Chinese, and WordPiece tokenization for
+all other languages](https://medium.com/@Nagakiran1/extending-google-bert-as-question-and-answering-model-and-chatbot-e3e7b47b721a). Both models should work out-of-the-box without any code
 changes. We did update the implementation of `BasicTokenizer` in
 `tokenization.py` to support Chinese character tokenization, so please update if
 you forked it. However, we did not change the tokenization API.
