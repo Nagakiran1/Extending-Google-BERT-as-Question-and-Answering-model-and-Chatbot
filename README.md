@@ -571,11 +571,11 @@ System       | Seq Length | Max Batch Size
 
 
 
-Pros .
+#### Pros .
 Requires no time in training the model, Training data preparation is Simple and fast.
 It can be scalable to large amount of data understanding.
 No need to specify the intend or any other responses for the questions.
 
-Cons
+#### Cons
 BERT is not appropriate in understanding the question and fetching the question related information from context. Its not able to produce good results even with small paragraph also. By using this chatbot, you will be able to rate the performance of BERT well( I have checked both BASE and LARGE bert models).
 
