@@ -195,6 +195,68 @@ The Context passed in command and the question mentioned in the command can be c
 BERT able to understands the context by learning through the Features generated and will be able to answer the question to the extent of trained data.
 
 
+## Extending BERT as Chatbot for Specific data
+
+BERT Question and Answer system meant and works well for only limited number of words summary like 1 to 2 paragraphs only. It can’t be able to answer well from understanding more than 10 pages of data. We can’t expect to have good results with large corpus as it is trained on SQuAD question and answer data, which has less summary paragraph and questions related to that.
+
+
+We can extend the BERT question and answer model to work as chatbot on large text. To accomplish the understanding of more than 10 pages of data, here we have used a specific approach of picking the data.  	
+
+```
+DocumentData.txt
+
+The pre-trained model can then be fine-tuned on small-data NLP tasks like question answering and sentiment analysis, resulting in substantial accuracy improvements compared to training on these datasets from scratch. 
+
+
+This week, we open sourced a new technique for NLP pre-training called Bidirectional Encoder Representations from Transformers, or BERT. With this release, anyone in the world can train their own state-of-the-art question answering system (or a variety of other models) in about 30 minutes on a single Cloud TPU, or in a few hours using a single GPU. 
+
+
+What Makes BERT Different?
+BERT builds upon recent work in pre-training contextual representations — including Semi-supervised Sequence Learning, Generative Pre-Training, ELMo, and ULMFit. However, unlike these previous models, BERT is the first deeply bidirectional, unsupervised language representation, pre-trained using only a plain text corpus (in this case, Wikipedia).
+	
+
+The Strength of Bidirectionality
+If bidirectionality is so powerful, why hasn’t it been done before? To understand why, consider that unidirectional models are efficiently trained by predicting each word conditioned on the previous words in the sentence
+```
+#### Data Preparation 
+The data wants to for the Questioning the BERT has to be copied in simple text file, delimitting with three '\n'.
+
+Data should be with different clusters of deviation information to use similarity algorithm well.
+
+[!alt text](https://github.com/Nagakiran1/Extending-Google-BERT-as-Question-and-Answering-model-and-Chatbot/blob/master/BERT_as_chatbot.png)
+
+Here, We first Segregate the data into parts of paragraphs while passing it to model. Once if the data is segregated, based on the question asked we will get the most similar paragraphs containing answer related information using word_vectors of gensim model. 
+Data Preparation to feed the
+
+Data preparation is very simple, here we are intended to feed the most similar paragraph to BERT, than to feed all the document of data that we have in questioning.
+
+
+
+```
+python run_squad.py \
+  --vocab_file=BERT_BASE_DIR/vocab.txt \
+  --bert_config_file=BERT_BASE_DIR/bert_config.json \
+  --init_checkpoint=BERT_BASE_DIR/bert_model.ckpt \
+  --do_predict=True\
+  --interact=True\
+  --context=Data/data.txt \
+  --output_dir=Data
+```	
+
+
+
+Which should produce an interactive chatbot interface like this:
+Output for the Question asked from the summary
+
+```shell
+>>>'what are bidirectional usage 	of BERT‘
+consider that unidirectional models 	are efficiently trained by predicting 	each word conditioned on the 	previous words in the sentence
+>>>what are the uses of pre-trained 	models
+fine-tuned on small-data NLP tasks like question answering and sentiment analysis
+>>>quit
+```
+
+
 #### The added Code does'nt change the basic functionalities BERT meant for, We can use the same Configurations for the training and predictions.
 #### The following command allows to train the model with the train sample SQuAD data and makes Predictions for the Dev set data.
 
