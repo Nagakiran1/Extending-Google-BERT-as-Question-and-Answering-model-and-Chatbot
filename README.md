@@ -262,6 +262,9 @@ SystemExit
 ```
 
 
+We can read big documents, books and other information content with BERT, without much manual effect.
+
+
 #### The added Code does'nt change the basic functionalities BERT meant for, We can use the same Configurations for the training and predictions.
 #### The following command allows to train the model with the train sample SQuAD data and makes Predictions for the Dev set data.
 
@@ -566,4 +569,13 @@ System       | Seq Length | Max Batch Size
 ...          | 384        | 0
 ...          | 512        | 0
 
+
+
+Pros .
+Requires no time in training the model, Training data preparation is Simple and fast.
+It can be scalable to large amount of data understanding.
+No need to specify the intend or any other responses for the questions.
+
+Cons
+BERT is not appropriate in understanding the question and fetching the question related information from context. Its not able to produce good results even with small paragraph also. By using this chatbot, you will be able to rate the performance of BERT well( I have checked both BASE and LARGE bert models).
 
