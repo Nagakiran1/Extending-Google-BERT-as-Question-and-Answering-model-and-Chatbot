@@ -16,7 +16,7 @@ The pre-trained model can then be fine-tuned on small-data NLP tasks like questi
 •	BERT is a huge model, with 24 Transformer blocks, 1024 hidden units in each layer, and 340M parameters.
 •	The model is pre-trained on 40 epochs over a 3.3 billion word corpus, including BooksCorpus (800 million words) and English Wikipedia (2.5 billion words).
 
-For more information on BERT , we can go through the [BERT Google AI blog ](https://ai.googleblog.com/2018/11/open-sourcing-bert-state-of-art-pre.html)
+For more information on BERT , we can go through the [BERT Google AI blog ](https://ai.googleblog.com/2018/11/open-sourcing-bert-state-of-art-pre.html), [BERT Features](https://medium.com/@Nagakiran1/extending-google-bert-as-question-and-answering-model-and-chatbot-e3e7b47b721a_
 
 
 
