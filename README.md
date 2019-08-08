@@ -249,11 +249,16 @@ Which should produce an interactive chatbot interface like this:
 Output for the Question asked from the summary
 
 ```shell
->>>'what are bidirectional usage 	of BERT‘
-consider that unidirectional models 	are efficiently trained by predicting 	each word conditioned on the 	previous words in the sentence
->>>what are the uses of pre-trained 	models
+>>>'what are bidirectional usage of BERT‘
+consider that unidirectional models are efficiently trained by predicting each word conditioned on the previous words in the sentence
+>>>what are the uses of pre-trained models
 fine-tuned on small-data NLP tasks like question answering and sentiment analysis
 >>>quit
+
+An exception has occurred, use %tb to see the full traceback.
+
+SystemExit
+
 ```
 
 
