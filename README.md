@@ -223,7 +223,7 @@ The data wants to for the Questioning the BERT has to be copied in simple text f
 
 Data should be with different clusters of deviation information to use similarity algorithm well.
 
-[!alt text](https://github.com/Nagakiran1/Extending-Google-BERT-as-Question-and-Answering-model-and-Chatbot/blob/master/BERT_as_chatbot.png)
+![alt text](https://github.com/Nagakiran1/Extending-Google-BERT-as-Question-and-Answering-model-and-Chatbot/blob/master/BERT_as_chatbot.png)
 
 Here, We first Segregate the data into parts of paragraphs while passing it to model. Once if the data is segregated, based on the question asked we will get the most similar paragraphs containing answer related information using word_vectors of gensim model. 
 Data Preparation to feed the
