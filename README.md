@@ -146,13 +146,13 @@ python run_squad.py \
 For more information about BERT features explanation please refer [BERT Embeddings Tutorial] (https://mccormickml.com/2019/05/14/BERT-word-embeddings-tutorial/)
 
 
-1)	Token to orig map :
+1)	**Token to orig map :
 Consideering the index of each word as a feature integer
 ```
 INFO:tensorflow:token_to_orig_map: 17:0 18:1 19:2 20:3 21:4 22:5 23:5 24:5 25:6 26:7 27:8 28:9 29:10 30:11 31:12 32:13 33:14 34:15 35:16 36:17 37:17 38:17 39:17 40:17 41:18 42:19 43:20 44:21 45:21 46:22 47:23 48:23 49:23 50:24 51:25 52:26 53:26 54:26 55:26 56:26 57:27 58:28 59:28 60:29 61:29 62:29 63:30 64:31 65:32 66:33 67:34 68:35 69:35 70:35 71:35 72:35 73:36 74:37 75:37 76:37 77:38 78:38 79:38 80:39 81:39 82:39 83:40 84:41 85:42 86:43 87:44 88:45 89:46 90:46 91:47 92:48 93:49 94:50 95:51 96:52 97:52 98:52 99:52 100:53 101:53 102:54 103:54 104:55 105:56 106:56 107:56 108:56 109:57 110:58 111:59 112:60 113:60 114:61 115:61 116:61 117:61 118:62 119:63 120:64 121:65 122:65 123:66 124:66 125:66 126:66 127:67 128:67 129:67 130:67 131:67 132:67 133:68 134:69 135:70 136:71 137:72 138:73 139:74 140:74 141:75 142:76 143:77 144:78 145:79 146:79 147:80 148:80 149:81 150:82 151:83 152:83 153:83 154:84 155:84 156:85 157:86 158:87 159:88 160:89 161:89 162:89 163:90 164:91 165:92 166:93 167:94 168:95 169:96 170:97 171:98 172:99 173:99 174:100 175:100 176:100 177:101 178:101 179:102 180:103 181:104 182:105 183:106 184:107 185:108 186:109 187:110 188:110 189:111 190:112 191:112 192:112 193:112 194:113 195:114 196:115 197:116 198:117 199:118 200:119 201:120 202:121 203:121 204:121 205:122 206:122 207:122 208:123 209:123
 
 ```
-2)	Token is max content :
+2)	**Token is max content :
 A Boolean index to each word representing whether the word is important in the context or not.
 
 ```
@@ -160,7 +160,7 @@ INFO:tensorflow:token_is_max_context: 17:True 18:True 19:True 20:True 21:True 22
 
 ```
 
-3)	Input_ids
+3)	**Input_ids
 Assigning word to vector ids to each word of context by considering the words dictionary data from pretrained BERT.
 
 ```
@@ -168,7 +168,7 @@ INFO:tensorflow:input_ids: 101 1134 183 2087 1233 1264 2533 1103 170 2087 1665 1
 
 ```
 
-4)	Input_mask :
+4)	**Input_mask :
 Boolean mask to the context words based on their presence and followed by zero padding to meet the max word vector representation used for specific downloaded BERT model.
 
 ```
@@ -177,7 +177,7 @@ INFO:tensorflow:input_mask: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
 
 ```
 
-5)	Segment_ids 
+5)	**Segment_ids 
 segment ids to indicate whether a token belongs to the first sequence or the second sequence. - generate valid length 	 	 
 
 ```
