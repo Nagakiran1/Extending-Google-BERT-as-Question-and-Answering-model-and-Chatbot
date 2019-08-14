@@ -177,7 +177,7 @@ INFO:tensorflow:input_mask: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
 
 ```
 
-5)	**Segment_ids **:
+5)	**Segment_ids**:
 segment ids to indicate whether a token belongs to the first sequence or the second sequence. - generate valid length 	 	 
 
 ```
