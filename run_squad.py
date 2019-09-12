@@ -12,6 +12,7 @@ import optimization
 import tokenization
 import six
 import os
+import time
 import tensorflow as tf
 
 
@@ -29,7 +30,7 @@ from gensim.parsing.preprocessing import remove_stopwords
 word_vectors = api.load("glove-wiki-gigaword-100")  # load pre-trained word-vectors from gensim-data
 
 
-
+'''
 flags = tf.flags
 
 FLAGS = flags.FLAGS
@@ -164,43 +165,44 @@ tf.flags.DEFINE_string(
     "question", None,
     "Questioning sentence for the Text summary  ")
 
+'''
 
-# class Flags:
-#     def __init__(self):
-#         self.bert_config_file = r'BERT_LARGE_DIR/bert_config.json'
-#         self.vocab_file = r'BERT_LARGE_DIR/vocab.txt'
-#         self.output_dir = 'squad_base'
-#         self.train_file = 'train-v1.2.json'
-#         self.predict_file = 'dev-v1.4.json'
-#         self.init_checkpoint = r'BERT_LARGE_DIR/bert_model.ckpt'
-#         self.do_lower_case = True
-#         self.max_seq_length = 384
-#         self.doc_stride = 128
-#         self.max_query_length = 64
-#         self.do_train = False
-#         self.do_predict = True
-#         self.train_batch_size = 12
-#         self.predict_batch_size = 8
-#         self.learning_rate = 3e-5
-#         self.num_train_epochs = 3
-#         self.warmup_proportion = 0.1
-#         self.save_checkpoints_steps = 1000
-#         self.iterations_per_loop = 1000
-#         self.n_best_size = 20
-#         self.max_answer_length = 30
-#         self.use_tpu =  False
-#         self.tpu_name = None
-#         self.tpu_zone = None
-#         self.gcp_project = None
-#         self.master = None
-#         self.num_tpu_cores = 8
-#         self.verbose_logging = False
-#         self.version_2_with_negative = False
-#         self.null_score_diff_threshold = 0.0
-#         self.context = None
-#         self.question = None
-#         self.interact = True
-# FLAGS = Flags()
+class Flags:
+    def __init__(self):
+        self.bert_config_file = r'BERT_BASE_DIR/bert_config.json'
+        self.vocab_file = r'BERT_BASE_DIR/vocab.txt'
+        self.output_dir = 'Data'
+        self.train_file = 'train-v1.2.json'
+        self.predict_file = 'dev-v1.4.json'
+        self.init_checkpoint = r'BERT_BASE_DIR/bert_model.ckpt'
+        self.do_lower_case = True
+        self.max_seq_length = 384
+        self.doc_stride = 128
+        self.max_query_length = 64
+        self.do_train = False
+        self.do_predict = True
+        self.train_batch_size = 12
+        self.predict_batch_size = 8
+        self.learning_rate = 3e-5
+        self.num_train_epochs = 3
+        self.warmup_proportion = 0.1
+        self.save_checkpoints_steps = 1000
+        self.iterations_per_loop = 1000
+        self.n_best_size = 20
+        self.max_answer_length = 30
+        self.use_tpu =  False
+        self.tpu_name = None
+        self.tpu_zone = None
+        self.gcp_project = None
+        self.master = None
+        self.num_tpu_cores = 8
+        self.verbose_logging = False
+        self.version_2_with_negative = False
+        self.null_score_diff_threshold = 0.0
+        self.context = 'data.txt'
+        self.question = None
+        self.interact = True
+FLAGS = Flags()
 
 
 
@@ -276,12 +278,13 @@ class InputFeatures(object):
     self.is_impossible = is_impossible
 
 
-def read_squad_examples(data, is_training):
+def read_squad_examples(is_training,data=None, input_file=None):
   """Read a SQuAD json file into a list of SquadExample."""
-  if FLAGS.context != None:
+  if FLAGS.context != None and FLAGS.interact==True:
+   input_data = data['data']
+  else:
    with tf.gfile.Open(input_file, "r") as reader:
-     input_data = json.load(reader)["data"]
-  input_data = data['data']
+     data = json.load(reader)['data']
 
   def is_whitespace(c):
     if c == " " or c == "\t" or c == "\r" or c == "\n" or ord(c) == 0x202F:
