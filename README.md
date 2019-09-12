@@ -239,7 +239,7 @@ python run_squad.py \
   --init_checkpoint=BERT_BASE_DIR/bert_model.ckpt \
   --do_predict=True\
   --interact=True\
-  --context=Data/data.txt \
+  --context=data.txt \
   --output_dir=Data
 ```	
 
