@@ -30,7 +30,6 @@ from gensim.parsing.preprocessing import remove_stopwords
 word_vectors = api.load("glove-wiki-gigaword-100")  # load pre-trained word-vectors from gensim-data
 
 
-'''
 flags = tf.flags
 
 FLAGS = flags.FLAGS
@@ -204,7 +203,7 @@ class Flags:
         self.interact = True
 FLAGS = Flags()
 
-
+'''
 
 
 
@@ -1361,9 +1360,12 @@ def main(_):
   if FLAGS.question != None:
     bert_config, run_config, tokenizer = initializingModels()
     model_fn, estimator = model_definition(bert_config, run_config)
-    with open(FLAGS.context,'r') as file:
-      context = file.read()
-    Answer = PredictAnswer(SummaryText=context,question=FLAGS.question, tokenizer=tokenizer, estimator=estimator)
+    if FLAGS.context.endswith('.txt'):
+      with open(FLAGS.context,'r') as file:
+        context = file.read()
+    else:
+        context = FLAGS.context
+    Answer = PredictAnswer(ContextSummary=context,question=FLAGS.question, tokenizer=tokenizer, estimator=estimator)
     print(Answer)
     return    
     
