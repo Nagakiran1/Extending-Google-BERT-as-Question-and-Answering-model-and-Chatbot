@@ -1360,6 +1360,7 @@ def main(_):
   if FLAGS.question != None:
     bert_config, run_config, tokenizer = initializingModels()
     model_fn, estimator = model_definition(bert_config, run_config)
+    
     if FLAGS.context.endswith('.txt'):
       with open(FLAGS.context,'r') as file:
         context = file.read()
